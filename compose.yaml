@@ -1,9 +1,24 @@
 services:
   db:
-    image: postgres:latest
+    image: postgres
+    container_name: cnl-db
     environment:
-      - POSTGRES_DB=appdb
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_USER=user
+      POSTGRES_DB: appdb
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: user
     ports:
       - 5432:5432
+    networks:
+      - cnl
+    restart: unless-stopped
+
+  maildev:
+    image: maildev/maildev
+    container_name: cnl-maildev
+    ports:
+      - 1080:1080
+      - 1025:1025
+
+networks:
+  cnl:
+    driver: bridge
