@@ -1,0 +1,6 @@
+# This works "idle" by default, as migrations are managed by spring. These configs needed for manual managing.
+changeLogFile: src/main/resources/db/changelog/db.changelog-master.yaml
+url: jdbc:postgresql://localhost:5432/appdb?serverTimezone=UTC
+username: user
+password: password
+driver: org.postgresql.Driver
