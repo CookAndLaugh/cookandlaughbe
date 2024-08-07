@@ -12,3 +12,12 @@ spring:
       mail:
         smtp:
           trust: "*"
+
+app:
+  security:
+    cors:
+      allowed-origins: http://localhost:5173
+      allowed-headers: "*"
+      exposed-headers: "*"
+    jwt:
+      secret-key: VmVyeUxvbmdBbmRWZXJ5U2VjcmV0S2V5U3RyaW5nVmVyeUxvbmdBbmRWZXJ5U2VjcmV0S2V5U3RyaW5n

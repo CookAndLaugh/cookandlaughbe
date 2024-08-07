@@ -2,14 +2,7 @@ server:
   error:
     include-message: always
   servlet:
-    context-path: /api/v1/
-
-app:
-  cors:
-    allowed-origins: "*"
-    allowed-methods: GET,POST,PUT,DELETE,OPTIONS
-    allowed-headers: "*"
-    exposed-headers: "*"
+    context-path: /api/${app.config.api-version}/
 
 spring:
   profiles:
@@ -50,7 +43,28 @@ spring:
   servlet:
     multipart:
       max-file-size: 1MB
+  liquibase:
+    enabled: true # Disable it to manage migrations manually. It'll allow to execute rollbacks manually.
 
 springdoc:
   default-produces-media-type: application/json
 
+app:
+  domain:
+    root: cookandlaugh.com.ua
+  config:
+    api-version: v1
+  security:
+    cors:
+      allowed-origins: ${ALLOWED_ORIGINS}
+      allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+      allowed-headers: ${ALLOWED_HEADERS}
+      exposed-headers: ${EXPOSED_HEADERS}
+    jwt:
+      secret-key: ${JWT_SECRET_KEY}
+      token-prefix: "Bearer "
+      token-expiration-days: 7
+    registration:
+      activation-code:
+        expiration-minutes: 15
+        confirmation-url: http://localhost:4200/confirm-registration

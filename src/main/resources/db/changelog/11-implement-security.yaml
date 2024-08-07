@@ -1,0 +1,225 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0
+      author: vansisto
+      preConditions:
+        - onFail: MARK_RAN
+        - onFailMessage: "Table 'users' already exists"
+        - not:
+            - tableExists:
+                tableName: users
+      comment: Creation table - users
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: usersPK
+              - column:
+                  name: firstname
+                  type: VARCHAR(50)
+              - column:
+                  name: lastname
+                  type: VARCHAR(50)
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: password
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: locked
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: enabled
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_date
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_modified_date
+                  type: TIMESTAMP
+      rollback:
+        - dropTable:
+            tableName: users
+
+  - changeSet:
+      id: 1
+      author: vansisto
+      preConditions:
+        - onFail: MARK_RAN
+        - onFailMessage: "Table 'role' already exists"
+        - not:
+            - tableExists:
+                tableName: role
+      comment: Creation table - role
+      changes:
+        - createTable:
+            tableName: role
+            columns:
+              - column:
+                  name: role_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: rolePK
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    unique: true
+      rollback:
+        - dropTable:
+            tableName: role
+
+  - changeSet:
+      id: 2
+      author: vansisto
+      preConditions:
+        - onFail: MARK_RAN
+        - onFailMessage: "Standart roles already exist"
+        - sqlCheck:
+            expectedResult: 0
+            sql: SELECT COUNT(*) FROM role WHERE name IN ('USER', 'MANAGER', 'ADMINISTRATOR', 'SUPER_ADMINISTRATOR')
+      comment: Insert standart roles
+      changes:
+        - insert:
+            tableName: role
+            columns:
+              - column:
+                  name: name
+                  value: 'USER'
+        - insert:
+            tableName: role
+            columns:
+              - column:
+                  name: name
+                  value: 'MANAGER'
+        - insert:
+            tableName: role
+            columns:
+              - column:
+                  name: name
+                  value: 'ADMINISTRATOR'
+        - insert:
+            tableName: role
+            columns:
+              - column:
+                  name: name
+                  value: 'SUPER_ADMINISTRATOR'
+      rollback:
+        - delete:
+            tableName: role
+            where: name='USER'
+        - delete:
+            tableName: role
+            where: name='MANAGER'
+        - delete:
+            tableName: role
+            where: name='ADMINISTRATOR'
+        - delete:
+            tableName: role
+            where: name='SUPER_ADMINISTRATOR'
+
+  - changeSet:
+      id: 3
+      author: vansisto
+      preConditions:
+        - onFail: MARK_RAN
+        - onFailMessage: "Table 'users_roles' already exists"
+        - not:
+            - tableExists:
+                tableName: users_roles
+      comment: Creation table - users_roles
+      changes:
+        - createTable:
+            tableName: users_roles
+            columns:
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_users_user
+                    referencedColumnNames: user_id
+                    referencedTableName: users
+              - column:
+                  name: role_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_users_role
+                    referencedColumnNames: role_id
+                    referencedTableName: role
+      rollback:
+        - dropTable:
+            tableName: users_roles
+
+  - changeSet:
+      id: 4
+      author: vansisto
+      preConditions:
+        - onFail: MARK_RAN
+        - onFailMessage: "Table 'activation_code' already exists"
+        - not:
+            - tableExists:
+                tableName: activation_code
+      comment: Creation table - activation_code
+      changes:
+        - createTable:
+            tableName: activation_code
+            columns:
+              - column:
+                  name: activation_code_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: activation_codePK
+              - column:
+                  name: code
+                  type: VARCHAR(255)
+                  constraints:
+                    unique: true
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_activation_code_user
+                    referencedColumnNames: user_id
+                    referencedTableName: users
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+              - column:
+                  name: expires_at
+                  type: TIMESTAMP
+              - column:
+                  name: validated_at
+                  type: TIMESTAMP
+      rollback:
+        - dropTable:
+            tableName: activation_code

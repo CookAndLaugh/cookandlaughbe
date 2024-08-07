@@ -1,4 +1,4 @@
 databaseChangeLog:
   - include:
-      file: init.yaml
+      file: 11-implement-security.yaml
       relativeToChangelogFile: true
