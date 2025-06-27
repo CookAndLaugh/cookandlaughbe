@@ -18,7 +18,7 @@ To run tests execute command:
 
 ## Swagger
 To open swagger go to
-`http://localhost:8080/swagger-ui/index.html`
+`http://localhost:8080/api/v1/swagger-ui/index.html`
 
 ## Liquibase migrations
 ⚠️ Migrations are managed by spring, and 'update' is running automatically. Therefore manual rollbacks won't work.

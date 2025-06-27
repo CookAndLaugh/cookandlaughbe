@@ -2,3 +2,6 @@ databaseChangeLog:
   - include:
       file: 11-implement-security.yaml
       relativeToChangelogFile: true
+  - include:
+      file: 13-implement-file-storing.yaml
+      relativeToChangelogFile: true

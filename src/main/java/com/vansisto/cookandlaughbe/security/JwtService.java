@@ -1,6 +1,6 @@
 package com.vansisto.cookandlaughbe.security;
 
-import com.vansisto.cookandlaughbe.config.properties.app.jwt.JwtPropertyConfig;
+import com.vansisto.cookandlaughbe.config.properties.AppProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -22,8 +22,7 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 @Service
 public class JwtService {
-
-    private final JwtPropertyConfig jwtPropertyConfig;
+    private final AppProperties appProperties;
 
     public String generateToken(UserDetails userDetails, Map<String, Object> claims) {
         List<String> authorities = userDetails.getAuthorities().stream()
@@ -36,7 +35,7 @@ public class JwtService {
                 .claims(claims)
                 .subject(userDetails.getUsername())
                 .issuedAt(now)
-                .expiration(DateUtils.addDays(now, jwtPropertyConfig.getTokenExpirationDays()))
+                .expiration(DateUtils.addDays(now, appProperties.security().jwt().tokenExpirationDays()))
                 .claim("authorities", authorities)
                 .signWith(getSignKey())
                 .compact();
@@ -51,7 +50,7 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        SecretKey secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtPropertyConfig.getSecretKey()));
+        SecretKey secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(appProperties.security().jwt().secretKey()));
         return Jwts.parser()
                 .verifyWith(secretKey)
                 .build()
@@ -69,7 +68,7 @@ public class JwtService {
     }
 
     private Key getSignKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(jwtPropertyConfig.getSecretKey());
+        byte[] keyBytes = Decoders.BASE64.decode(appProperties.security().jwt().secretKey());
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }

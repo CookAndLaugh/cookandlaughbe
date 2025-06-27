@@ -66,5 +66,12 @@ app:
       token-expiration-days: 7
     registration:
       activation-code:
+        length: 6
         expiration-minutes: 15
-        confirmation-url: http://localhost:4200/confirm-registration
+
+aws:
+  region: eu-central-1
+  s3:
+    buckets:
+      content:
+        bucket-name: cnl-content

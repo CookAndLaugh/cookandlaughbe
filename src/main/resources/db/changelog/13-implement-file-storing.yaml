@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: 5
+      author: vansisto
+      preConditions:
+        - onFail: MARK_RAN
+        - onFailMessage: "Table 'recipe' already exists"
+        - not:
+            - tableExists:
+                tableName: recipe
+      comment: Creation table - recipe
+      changes:
+        - createTable:
+            tableName: recipe
+            columns:
+              - column:
+                  name: recipe_id
+                  type: INTEGER
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: recipesPK
+      rollback:
+        - dropTable:
+            tableName: recipe

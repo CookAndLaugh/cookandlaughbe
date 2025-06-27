@@ -1,6 +1,6 @@
 package com.vansisto.cookandlaughbe.service.impl;
 
-import com.vansisto.cookandlaughbe.config.properties.app.registration.ActivationCodePropertyConfig;
+import com.vansisto.cookandlaughbe.config.properties.AppProperties;
 import com.vansisto.cookandlaughbe.entity.ActivationCode;
 import com.vansisto.cookandlaughbe.entity.User;
 import com.vansisto.cookandlaughbe.repository.ActivationCodeRepository;
@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Service
 public class ActivationCodeServiceImpl implements ActivationCodeService {
 
-    private final ActivationCodePropertyConfig activationCodePropertyConfig;
+    private final AppProperties appProperties;
     private final ActivationCodeRepository activationCodeRepository;
 
     @Override
@@ -24,13 +24,13 @@ public class ActivationCodeServiceImpl implements ActivationCodeService {
     public String generateAndSaveActivationCode(User user) {
         String generatedCode;
         do {
-            generatedCode = generateActivationCode(6);
+            generatedCode = generateActivationCode(appProperties.security().registration().activationCode().length());
         } while (activationCodeRepository.existsByCode(generatedCode));
 
         ActivationCode newActivationCode = new ActivationCode()
                 .setCode(generatedCode)
                 .setCreatedAt(LocalDateTime.now())
-                .setExpiresAt(LocalDateTime.now().plusMinutes(activationCodePropertyConfig.getExpirationMinutes()))
+                .setExpiresAt(LocalDateTime.now().plusMinutes(appProperties.security().registration().activationCode().expirationMinutes()))
                 .setUser(user);
         activationCodeRepository.save(newActivationCode);
         return generatedCode;

@@ -21,3 +21,16 @@ app:
       exposed-headers: "*"
     jwt:
       secret-key: VmVyeUxvbmdBbmRWZXJ5U2VjcmV0S2V5U3RyaW5nVmVyeUxvbmdBbmRWZXJ5U2VjcmV0S2V5U3RyaW5n
+    registration:
+      activation-code:
+        confirmation-url: http://localhost:8080/api/v1/auth/confirm-registration
+        login-redirect-suffix-url: /auth/login
+        registration-redirect-suffix-url: /auth/registration
+
+aws:
+  region: us-east-1
+  s3:
+    host: http://localhost:4566
+    buckets:
+      content:
+        bucket-name: cnl-content-local

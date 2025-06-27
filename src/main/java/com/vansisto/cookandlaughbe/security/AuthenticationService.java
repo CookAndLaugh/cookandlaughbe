@@ -83,7 +83,7 @@ public class AuthenticationService {
     }
 
     @Transactional
-    public void confirmRegistration(String code) {
+    public boolean confirmRegistration(String code) {
         ActivationCode activationCode = activationCodeRepository.findByCode(code)
                 .orElseThrow(() -> new ActivationCodeNotFoundException(code));
         User user = activationCode.getUser();
@@ -92,6 +92,7 @@ public class AuthenticationService {
 
         activationCode.setValidatedAt(LocalDateTime.now());
         user.setEnabled(true);
+        return true;
     }
 
     private static void fillClaims(User loggedInUser, Map<String, Object> claims) {

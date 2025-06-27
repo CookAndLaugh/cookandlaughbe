@@ -1,5 +1,6 @@
 package com.vansisto.cookandlaughbe.controller;
 
+import com.vansisto.cookandlaughbe.config.properties.AppProperties;
 import com.vansisto.cookandlaughbe.dto.LoginRequest;
 import com.vansisto.cookandlaughbe.dto.LoginResponse;
 import com.vansisto.cookandlaughbe.dto.RegistrationRequest;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.view.RedirectView;
 
 import static org.springframework.http.HttpStatus.ACCEPTED;
 
@@ -25,6 +27,7 @@ import static org.springframework.http.HttpStatus.ACCEPTED;
 public class AuthController {
 
     private final AuthenticationService authenticationService;
+    private final AppProperties appProperties;
 
     @PostMapping("/register")
     @ResponseStatus(ACCEPTED)
@@ -38,7 +41,12 @@ public class AuthController {
     }
 
     @GetMapping("/confirm-registration")
-    public void confirmRegistration(@RequestParam String code) {
-        authenticationService.confirmRegistration(code);
+    public RedirectView confirmRegistration(@RequestParam String code) {
+        boolean isRegistrationConfirmed = authenticationService.confirmRegistration(code);
+
+        RedirectView loginRedirectView = new RedirectView(appProperties.security().registration().activationCode().loginRedirectSuffixUrl());
+        RedirectView registrationRedirectView = new RedirectView(appProperties.security().registration().activationCode().registrationRedirectSuffixUrl()); //TODO: Don't needed. As it's never reached. If no success then an exception will be thrown before
+
+        return isRegistrationConfirmed ? loginRedirectView : registrationRedirectView;
     }
 }

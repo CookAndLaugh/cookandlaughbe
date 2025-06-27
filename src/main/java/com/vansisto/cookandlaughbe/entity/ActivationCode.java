@@ -26,7 +26,7 @@ public class ActivationCode {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long activationCodeId;
+    private Integer activationCodeId;
 
     @Column(unique = true)
     private String code;

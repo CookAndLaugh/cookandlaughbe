@@ -19,6 +19,16 @@ services:
       - 1080:1080
       - 1025:1025
 
+  localstack:
+    container_name: cnl-localstack
+    image: localstack/localstack
+    ports:
+      - 4566:4566            # LocalStack Gateway
+    environment:
+      - SERVICES=s3
+    volumes:
+      - ./localstack-bootstrap:/etc/localstack/init/ready.d
+
 networks:
   cnl:
     driver: bridge

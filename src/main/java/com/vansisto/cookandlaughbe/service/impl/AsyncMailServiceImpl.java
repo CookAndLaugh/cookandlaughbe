@@ -1,6 +1,6 @@
 package com.vansisto.cookandlaughbe.service.impl;
 
-import com.vansisto.cookandlaughbe.config.properties.app.domain.DomainPropertyConfig;
+import com.vansisto.cookandlaughbe.config.properties.AppProperties;
 import com.vansisto.cookandlaughbe.helper.email.ActivationCodeEmail;
 import com.vansisto.cookandlaughbe.helper.email.EmailTemplate;
 import com.vansisto.cookandlaughbe.service.AsyncMailService;
@@ -25,7 +25,7 @@ public class AsyncMailServiceImpl implements AsyncMailService {
 
     private final JavaMailSender mailSender;
     private final SpringTemplateEngine templateEngine;
-    private final DomainPropertyConfig domainPropertyConfig;
+    private final AppProperties appProperties;
 
     @Override
     @Async
@@ -56,7 +56,7 @@ public class AsyncMailServiceImpl implements AsyncMailService {
 
     private MimeMessageHelper buildMimeMessageHelper(ActivationCodeEmail activationCodeEmail) throws MessagingException {
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mailSender.createMimeMessage(), MULTIPART_MODE_MIXED, UTF_8.name());
-        mimeMessageHelper.setFrom("confirm@%s".formatted(domainPropertyConfig.getRoot()));
+        mimeMessageHelper.setFrom("confirm@%s".formatted(appProperties.domain().root()));
         mimeMessageHelper.setTo(activationCodeEmail.getTo());
         mimeMessageHelper.setSubject(activationCodeEmail.getSubject());
         return mimeMessageHelper;
