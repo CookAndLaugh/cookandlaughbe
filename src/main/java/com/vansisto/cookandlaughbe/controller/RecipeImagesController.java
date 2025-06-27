@@ -1,6 +1,6 @@
 package com.vansisto.cookandlaughbe.controller;
 
-import com.vansisto.cookandlaughbe.service.RecipeService;
+import com.vansisto.cookandlaughbe.service.RecipeImagesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,17 +12,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/recipe")
-public class RecipeController {
-    private final RecipeService recipeService;
+@RequestMapping("/recipe-images")
+public class RecipeImagesController {
+    private final RecipeImagesService recipeImagesService;
 
-    @PostMapping(value = "/thumbnail/{recipeId}", consumes = "multipart/form-data")
-    public Object uploadThumbnail(
+    @PostMapping(value = "/upload/{recipeId}", consumes = "multipart/form-data")
+    public void uploadRecipeImage(
             @PathVariable Integer recipeId,
             @RequestPart MultipartFile file,
             Authentication authentication) {
-        recipeService.updateRecipeThumbnail(file, recipeId, authentication);
-        return null;
+        recipeImagesService.uploadRecipeImage(file, recipeId, authentication);
     }
 
 }

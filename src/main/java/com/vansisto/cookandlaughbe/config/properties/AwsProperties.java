@@ -27,4 +27,12 @@ public class AwsProperties {
             ) {}
         }
     }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    public void setS3(S3 s3) {
+        this.s3 = s3;
+    }
 }

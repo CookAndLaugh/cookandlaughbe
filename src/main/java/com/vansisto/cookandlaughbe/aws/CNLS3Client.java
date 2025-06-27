@@ -18,6 +18,7 @@ import java.io.IOException;
 public class CNLS3Client {
     private final S3Client s3Client;
 
+    // TODO: Make it concurrent
     public void storeFile(MultipartFile file, String bucketName, String key) {
         log.info("Storing file {} to bucket {} with key {}", file, bucketName, key);
 
@@ -33,5 +34,9 @@ public class CNLS3Client {
         } catch (IOException e) {
             throw new RuntimeException("Unable to get bytes from file: " + e); //TODO: Handle this exception properly
         }
+    }
+
+    public String getFileUrl(String bucketName, String objectKey) {
+        return null;
     }
 }

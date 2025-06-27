@@ -11,6 +11,8 @@ services:
     networks:
       - cnl
     restart: unless-stopped
+    profiles:
+      - local
 
   maildev:
     image: maildev/maildev
@@ -18,6 +20,8 @@ services:
     ports:
       - 1080:1080
       - 1025:1025
+    profiles:
+      - local
 
   localstack:
     container_name: cnl-localstack
@@ -28,6 +32,8 @@ services:
       - SERVICES=s3
     volumes:
       - ./localstack-bootstrap:/etc/localstack/init/ready.d
+    profiles:
+      - local
 
 networks:
   cnl:
